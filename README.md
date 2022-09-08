@@ -16,6 +16,7 @@ We provide a Pytorch toolbox for Face Images Degradation (1) and Face Recognitio
  <img src="images/degradation.jpg"  width="750" alt="Degradation Results"/> 
 </div>
 <br>
+
 - Shows the results of the degradation in relation to other types of algorithmic disturbances and to original images acquired in unconstrained environments
 
 <br>
@@ -91,5 +92,5 @@ You should have received a copy of the GNU General Public License along with thi
 
 ## Acknowledgements
 
-This work is greatly inspired by <a href="https://github.com/atzoriandrea/Exploratory-Analysis-in-Face-Authentication" target="_blank">Explaining Disparate Impacts in Face Recognition via Image Characteristics</a>. We thank the authors a lot for their valuable efforts.
+This work is greatly inspired by <a href="https://github.com/atzoriandrea/Exploratory-Analysis-in-Face-Authentication" target="_blank">Explaining Disparate Impacts in Face Recognition via Image Characteristics</a> and represents an extension of the framework.
 
