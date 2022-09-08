@@ -1,0 +1,20 @@
+# train.sh parameters description
+ - `--data_root_train` : root folder for your selected Dataset (the folder containing all the sub-folders)
+ - `--train_file` : path to the file that lists all training files and relative classes (examples in drive folder)
+ - `--backbone_type` : name of the specified backbone
+ - `--backbone_conf_file` : path of the configuration file for the selected backbone
+ - `--head_type` : name of the specified head
+ - `--head_conf_file` : path of the configuration file for the selected head
+ - `--lr` : initial learning rate value 
+ - `--out_dir` : path where your trained models will be saved
+ - `--epoches` : number of training epochs
+ - `--step` : epochs in which the current lr will be divided by 10 (e.g. '5,12,22,35,48')
+ - `--print_freq` : print frequency for logging purposes (number of batches)
+ - `--save_freq` : intermediate checkpoints in which the model will be saved (number of batches)
+ - `--batch_size` : the size of your batches
+ - `--log_dir` : logging path
+ - `--cuda` : set as True if you have a CUDA capable GPU
+ - `--saveall` : if True, saves on model file for every epoch
+ - `--resume` : if set, the script will assume that you are going to resume a previous training
+ - `--pretrain_model` : path of the previously trained model (use if resume parameter is set)
+ - `--resume_from_epoch` : number of the epoch in which the previous training was interrupted
