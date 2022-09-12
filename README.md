@@ -63,13 +63,28 @@ an evaluation part that:
 In order to install all the necessary prerequisites, you can simply execute the following command: \
 `pip install -r requirements.txt`
 
-## Model Training
+## Degradation Module
+
+### GAN Training
+See <a href="src/image_degradation_rq1/training_module/README.md" target="_blank">README</a> in <a href="src/image_degradation_rq1/training_module" target="_blank">src/image_degradation_rq1/training_module</a> folder
+
+### GAN Evaluation
+
+See <a href="src/image_degradation_rq1/evaluation_module/README.md" target="_blank">README</a> in <a href="src/image_degradation_rq1/evaluation_module" target="_blank">src/image_degradation_rq1/evaluation_module</a> folder
+
+### Image Degradation
+
+See <a href="src/image_degradation_rq1/degradation_module/README.md" target="_blank">README</a> in <a href="src/image_degradation_rq1/degradation_module" target="_blank">src/image_degradation_rq1/degradation_module</a> folder
+
+
+## Face Recognition Module
+### Model Training
 See <a href="training/README.md" target="_blank">README</a> in <a href="training" target="_blank">training folder</a>
 
-## Dataset Preprocessing and combined models training
-See <a href="src/README.md" target="_blank">README</a> in <a href="src" target="_blank">src</a> folder
+### Dataset Preprocessing and combined models training
+See <a href="src/face_recognition_rq2/README.md" target="_blank">README</a> in <a href="src" target="_blank">src/face_recognition_rq2</a> folder
 
-## Model Evaluation
+### Model Evaluation
 See <a href="src/experiments/README.md" target="_blank">README</a> in <a href="src/experiments" target="_blank">src/experiments</a> folder
 
 
