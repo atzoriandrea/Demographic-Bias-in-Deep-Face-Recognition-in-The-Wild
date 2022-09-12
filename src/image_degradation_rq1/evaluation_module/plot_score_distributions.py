@@ -75,7 +75,7 @@ if __name__ == '__main__':
         parser.add_argument('--files_basepath', metavar='path',
                             help='basepath of npy files computed with the get_discriminators_scores script', required=True)
         parser.add_argument('--qmul_results', metavar='path',
-                            help='path to qmul npy file computed with the get_discriminators_scores script', required=True)
+                            help='path to qmul npy file computed with the get_discriminators_scores script', required=False)
         args = parser.parse_args()
     except Exception as e:
         print(e)
