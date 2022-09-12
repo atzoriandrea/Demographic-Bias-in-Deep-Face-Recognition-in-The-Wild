@@ -32,11 +32,11 @@ def get_files_full_path(rootdir):
     return paths
 
 
-def csv_to_test(csv_file_name, basepath):
+def csv_to_test(csv_file_name, basepath, bs):
     def compute_correct_batch_size(group_list):
         max = 0
         l = len(group_list)
-        for bs in range(1, 96):
+        for bs in range(1, 24):
             if l % bs == 0:
                 max = bs
         return max
@@ -66,24 +66,34 @@ def csv_to_test(csv_file_name, basepath):
                         group_cmp.append(int(data[4].strip()))
                     ref_file.write(" ".join([r, cls, "\n"]))
                     cmp_file.write(" ".join([c, cls, "\n"]))
-    bs = compute_correct_batch_size(group_ref)
-    dl_ref = DataLoader(ImageDataset(basepath, ref), bs, shuffle=False, num_workers=4)
-    dl_cmp = DataLoader(ImageDataset(basepath, cmp), bs, shuffle=False, num_workers=4)
-    return dl_ref, dl_cmp, group_ref, group_cmp, ref_id
+    bs = compute_correct_batch_size(group_ref) if bs is None else bs
+    dl_ref = DataLoader(ImageDataset(basepath, ref), bs, shuffle=False, num_workers=4, drop_last=True)
+    dl_cmp = DataLoader(ImageDataset(basepath, cmp), bs, shuffle=False, num_workers=4, drop_last=True)
+    size = bs * len(dl_ref)
+
+    return dl_ref, dl_cmp, group_ref[:size], group_cmp[:size], ref_id[:size]
 
 
 def inference(dl_ref, dl_cmp, device, model):
+    bs = dl_ref.batch_size
+    ref = torch.zeros((bs * len(dl_ref), 512))  # .to(device)
+    matches = torch.zeros((bs * len(dl_ref),))
+    cmp = torch.zeros((bs * len(dl_ref), 512))  # .to(device)
     with tqdm(total=2 * len(dl_ref)) as pbar:
         for batch_idx, (images, labels) in enumerate(dl_ref):
             images = images.to(device)
-            labels = labels.to(device)
+            labels = labels  # .to(device)
+            """
             outputs_temp = model.module.backbone.forward(images)
             if batch_idx == 0:
                 ref = outputs_temp.cpu().detach()
                 matches = labels.cpu().detach()
             else:
-                ref = torch.vstack((ref, outputs_temp.cpu().detach()))
-                matches = torch.vstack((matches, labels.cpu().detach()))
+                ref = torch.cat([ref, outputs_temp.cpu().detach()], dim=0)
+                matches = torch.cat([matches, labels.cpu().detach()], dim=0)
+               """
+            ref[batch_idx * bs: (batch_idx + 1) * bs] = model.module.backbone.forward(images).cpu().detach()
+            matches[batch_idx * bs: (batch_idx + 1) * bs] = labels
             gc.collect()
             torch.cuda.empty_cache()
             pbar.update(1)
@@ -91,19 +101,21 @@ def inference(dl_ref, dl_cmp, device, model):
         for batch_idx, (images, labels) in enumerate(dl_cmp):
             images = images.to(device)
             labels = labels.to(device)
+            """
             outputs_temp = model.module.backbone.forward(images)
             if batch_idx == 0:
                 cmp = outputs_temp.cpu().detach()
             else:
-                cmp = torch.vstack((cmp, outputs_temp.cpu().detach()))
+                cmp = torch.cat([cmp, outputs_temp.cpu().detach()], dim=0)
+            """
+            cmp[batch_idx * bs: (batch_idx + 1) * bs] = model.module.backbone.forward(images).cpu().detach()
             gc.collect()
             torch.cuda.empty_cache()
             pbar.update(1)
-    return ref, cmp, matches
+    return ref.cpu().detach(), cmp.cpu().detach(), matches
 
 
 def load_model(model_path):
-
     model = torch.load(model_path)
     try:
         while model.module.module != None:
@@ -154,18 +166,17 @@ def get_far_frr_by_user(user_data, threshold):
 def get_graphs_and_matrices(cosines, group_ref, m, path):
     groups = list(set(group_ref))
     l = len(groups)
-    labels = ["AM", "AW", "BM", "BW", "CM", "CW"]
-    colors = ["red", "orange", "blue", "yellow", "violet", "black"]
-    rows= l // 3
-    cols = l // rows
-    fig1, axs1 = plt.subplots(rows, cols, facecolor='white')
+    labels = ["Asian", "Black", "Caucasian"]
+    colors = ["red", "blue", "yellow"]
+
+    fig1, axs1 = plt.subplots(1, 3, facecolor='white')
     fig1.set_size_inches((15, 10))
     fig2, axs2 = plt.subplots(2, 2, facecolor='white')
     fig2.set_size_inches((15, 15))
-    cosines_norm = NormalizeData(cosines)
     eer_auc_far_frr_far1_frr1 = np.zeros((6, l))
     for grp_idx, group in enumerate(groups):
-        subset_norm = cosines_norm[np.asarray(group_ref) == group]
+        subset = cosines[np.asarray(group_ref) == group]
+        subset_norm = NormalizeData(subset)
         fpr, tpr, thresholds = metrics.roc_curve(m[np.asarray(group_ref) == group], subset_norm, pos_label=1)
         idxs = np.sort(np.where(thresholds > 1)).flatten()[::-1]
         if len(idxs) > 0:
@@ -180,15 +191,15 @@ def get_graphs_and_matrices(cosines, group_ref, m, path):
         idx_far_frr = most_sim_idx(fpr, fnr, eer)
         idx_f1 = far1perc(fpr)
         thresh = interp1d(fpr, thresholds)(eer)
-        axis = axs1[round((group / l) + 0.0001), group % 3] if rows > 1 else axs1[group % 3]
+        axis = axs1[group]
         axis.set_title(" - ".join(['Equal Error Rate', labels[group]]))
         axis.plot(np.sort(fpr)[::-1], label="FAR")  # Sorted in ascending order
         axis.plot(np.sort(fnr), label="FRR")
-        axis.axvline(x=(np.abs(thresholds[::-1] - thresh)).argmin(),label='EER = %0.3f' % eer, color="red")
+        axis.axvline(x=(np.abs(thresholds[::-1] - thresh)).argmin(), label='EER = %0.3f' % eer, color="red")
         axis.set_ylabel('Error')
         axis.set_xlabel('Security Threshold')
         step = int(len(thresholds) / 5)
-        axis.set_xticks(list(range(len(thresholds)))[::step],np.round(thresholds[::-step], 2))
+        axis.set_xticks(list(range(len(thresholds)))[::step], np.round(thresholds[::-step], 2))
         axis.set_box_aspect(1.0)
         axis.legend(loc="upper center")
         ##############################################
@@ -218,8 +229,9 @@ def get_graphs_and_matrices(cosines, group_ref, m, path):
             axs2[row, 1].legend(loc='best')
             axs2[row, 1].set_xlim(0, 1.4)
             axs2[row, 1].set_ylim(0, 7)
-        eer_auc_far_frr_far1_frr1[:, grp_idx] = eer, roc_auc , fpr[idx_far_frr], fnr[idx_far_frr], fpr[idx_f1], fnr[idx_f1]
-        del subset_norm
+        eer_auc_far_frr_far1_frr1[:, grp_idx] = eer, roc_auc, fpr[idx_far_frr], fnr[idx_far_frr], fpr[idx_f1], fnr[
+            idx_f1]
+        del subset, subset_norm
     fig1.savefig(os.path.join(path, 'FAR_FRR_ERR.png'), dpi=fig1.dpi)
     fig2.savefig(os.path.join(path, 'AUC_CosDensities.png'), dpi=fig2.dpi)
     plt.close('all')
@@ -228,7 +240,7 @@ def get_graphs_and_matrices(cosines, group_ref, m, path):
 
 def get_heatmaps(eer_auc_far_frr_far1_frr1, path, groups):
     eer, auc, far, frr, far1, frr1 = eer_auc_far_frr_far1_frr1
-    labels_tot = ["AM", "AW", "BM", "BW", "CM", "CW"]
+    labels_tot = ["Asian", "Black", "Caucasian"]
     labels = [labels_tot[i] for i in groups]
     eerdiff = np.round(np.array(eer)[:, None] - np.array(eer)[None, :], 3)
     aucdiff = np.round(np.array(auc)[:, None] - np.array(auc)[None, :], 3)
@@ -267,7 +279,7 @@ def get_heatmaps_by_id_and_group(cosines, group_ref, ref_id, m, path):
     identities = list(set(ref_id))
     avg_fars = np.zeros((len(identities), 6), dtype=np.float32)
     avg_frrs = np.zeros((len(identities), 6), dtype=np.float32)
-    labels_tot = ["AM", "AW", "BM", "BW", "CM", "CW"]
+    labels_tot = ["Asian", "Black", "Caucasian"]
     labels = [labels_tot[i] for i in groups]
     last = 0
     last_id = 0
@@ -384,15 +396,39 @@ def pipeline(args):
         os.makedirs(directory)
         if comparison.endswith(".csv"):
             filename = comparison.split("/")[-1].replace(".csv", "")
-
+            batch_sizes = [512, 256, 128, 96, 64]
+            done = False
             print("Preparing test files...")
-            dl_ref, dl_cmp, group_ref, group_cmp , ref_id = csv_to_test(comparison, bp)
+            i = 0
+            """
+            while not done:
+                try:
+                    if i < len(batch_sizes)-1:
+                        dl_ref, dl_cmp, group_ref, group_cmp , ref_id = csv_to_test(comparison, bp, batch_sizes[i])
+                    else:
+                        dl_ref, dl_cmp, group_ref, group_cmp, ref_id = csv_to_test(comparison, bp, None)
+                    print("Inferencing dataset...")
+                    ref, cmp, matches = inference(dl_ref, dl_cmp, device, model)
+                    done = True
+                except:
+                    if i < len(batch_sizes)-1:
+                        print("Too huge batch size! New attempt with bs  = %d" % batch_sizes[i+1])
+                    else:
+                        print("Too huge batch size! autocomputing...")
+                        dl_ref, dl_cmp, group_ref, group_cmp, ref_id = csv_to_test(comparison, bp, None)
+                    gc.collect()
+                    torch.cuda.empty_cache()
+                    i+=1
+"""
+            dl_ref, dl_cmp, group_ref, group_cmp, ref_id = csv_to_test(comparison, bp, 32)
             print("Inferencing dataset...")
             ref, cmp, matches = inference(dl_ref, dl_cmp, device, model)
             m = matches.flatten()
             cos = torch.nn.CosineSimilarity(dim=1, eps=1e-6)
             results = cos(ref, cmp)
-            np_res = np.vstack([results.numpy(), m.numpy(), group_ref, group_cmp, list(map(int, ref_id))]).T
+            size = results.shape[0]
+            np_res = np.vstack(
+                [results.numpy(), m.numpy(), group_ref[:size], group_cmp[:size], list(map(int, ref_id))[:size]]).T
             outcos = os.path.join(directory, "_".join([model_t, "_results_", filename, ".npy"]))
             np.save(outcos, np_res)
         elif comparison.endswith(".npy"):
@@ -405,8 +441,8 @@ def pipeline(args):
             raise Exception
         print("Computing and saving results...")
         eer_auc, groups = get_graphs_and_matrices(results, group_ref, m, directory)
-        #get_heatmaps(eer_auc, directory, groups)
-        #get_heatmaps_by_id_and_group(results, group_ref, ref_id, m, directory)
+        get_heatmaps(eer_auc, directory, groups)
+        get_heatmaps_by_id_and_group(results, group_ref, ref_id, m, directory)
 
 
 if __name__ == '__main__':
@@ -420,7 +456,7 @@ if __name__ == '__main__':
                             help='path to model(s)')
         parser.add_argument('--cmps', metavar='path', required=True,
                             help='path to list of csv files')
-        parser.add_argument('--base', metavar='path',
+        parser.add_argument('--base', metavar='path', required=True,
                             help='path to dataset basepath')
         args = parser.parse_args()
         if args.models is None and args.model is None:
