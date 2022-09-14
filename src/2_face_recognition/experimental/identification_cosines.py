@@ -1,6 +1,6 @@
 import parser
 import sys
-from jstsp_rq2_b_dict import *
+from identification_files_dict import *
 from tqdm import tqdm
 import numpy as np
 from ordered_set import OrderedSet

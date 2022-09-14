@@ -6,7 +6,7 @@
 
 import sys
 import yaml
-sys.path.append('../../')
+sys.path.append('../../../../')
 from models_definitions.backbone.ResNets import Resnet
 from models_definitions.backbone.MobileFaceNets import MobileFaceNet
 from models_definitions.backbone.EfficientNets import EfficientNet

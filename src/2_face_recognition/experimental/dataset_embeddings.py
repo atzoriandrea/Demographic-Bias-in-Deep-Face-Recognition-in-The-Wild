@@ -6,9 +6,6 @@ from tqdm import tqdm
 
 sys.path.append('../')
 sys.path.append('../../')
-from training_mode.conventional_training.train import FaceModel
-from backbone.backbone_def import BackboneFactory
-from head.head_def import HeadFactory
 import numpy as np
 from data_processor.train_dataset import ImageDataset
 import torch
@@ -50,38 +47,12 @@ def compute_correct_batch_size(group_list):
 
 def inference(dataloader, model_path):
     model, device = load_model(model_path)
-
-    #with tqdm(total=len(dataloader)) as pbar:
-        #for batch_idx, (images, labels) in enumerate(dataloader):
-            #images = images.to(device)
-            #labels = labels.to(device)
-            #outputs_temp = model.module.backbone.forward(images)
-            #if batch_idx == 0:
-                #embeddings = outputs_temp.cpu().detach()
-                #identities = labels.cpu().detach()
-            #else:
-                #embeddings = torch.cat([embeddings, outputs_temp.cpu().detach()], dim=0)
-                #identities = torch.cat([identities, labels.cpu().detach()], dim=0)
-            #gc.collect()
-            #torch.cuda.empty_cache()
-            #pbar.update(1)
-
     bs = dataloader.batch_size
     embeddings = torch.zeros((bs * len(dataloader), 512))  # .to(device)
     identities = torch.zeros((bs * len(dataloader),))  # .to(device)
     with tqdm(total=len(dataloader)) as pbar:
         for batch_idx, (images, labels) in enumerate(dataloader):
             images = images.to(device)
-            labels = labels  # .to(device)
-            """
-            outputs_temp = model.module.backbone.forward(images)
-            if batch_idx == 0:
-                ref = outputs_temp.cpu().detach()
-                matches = labels.cpu().detach()
-            else:
-                ref = torch.cat([ref, outputs_temp.cpu().detach()], dim=0)
-                matches = torch.cat([matches, labels.cpu().detach()], dim=0)
-               """
             embeddings[batch_idx * bs: (batch_idx + 1) * bs] = model.module.backbone.forward(images).cpu().detach()
             identities[batch_idx * bs: (batch_idx + 1) * bs] = labels
             gc.collect()

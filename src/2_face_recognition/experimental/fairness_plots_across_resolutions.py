@@ -39,8 +39,8 @@ def far_threshold_idx(cosines_norm, m, far_t, label =""):
 
     return thresh
 
-def get_frr_at_fars(cosines, group_ref, m):
-    far_values = [0.01, 0.001, 0.0001]
+def usability_at_security_level(cosines, group_ref, m, values):
+    far_values = values
     groups = list(set(group_ref))
     l = len(groups)
     fixed_fars = []
@@ -64,30 +64,6 @@ def get_frr_at_fars(cosines, group_ref, m):
         fixed_fars.append([fnr[most_sim_idx(thresholds, x)] for x  in ts])
     return fixed_fars
 
-def get_fnir_at_fpirs(cosines, group_ref, m):
-    far_values = [0.3, 0.2, 0.1]
-    groups = list(set(group_ref))
-    l = len(groups)
-    fixed_fars = []
-    #fpr_tot, tpr_tot, thresholds_tot = metrics.roc_curve(m, cosines, pos_label=1).
-    cosines = normalizeData(cosines)
-    ts = [far_threshold_idx(normalizeData(cosines),m, v) for v in far_values]
-
-    for grp_idx, group in enumerate(groups):
-        subset = cosines[np.asarray(group_ref) == group]
-        #subset_norm = normalizeData(subset)
-        fpr, tpr, thresholds = metrics.roc_curve(m[np.asarray(group_ref) == group], subset, pos_label=1)
-        idxs = np.sort(np.where(thresholds > 1)).flatten()[::-1]
-        if len(idxs) > 0:
-            fpr = np.delete(fpr, idxs)
-            tpr = np.delete(tpr, idxs)
-            thresholds = np.delete(thresholds, idxs)
-        fnr = 1 - tpr
-
-
-        #print(fnr[x])
-        fixed_fars.append([fnr[most_sim_idx(thresholds, x)] for x  in ts])
-    return fixed_fars
 
 
 def get_data(npy_file):
@@ -137,7 +113,7 @@ def prepare_files(rootdir):
 
 def get_params(task):
     metric = ["FRR", "FAR"] if task != "Identification" else ["FNIR", "FPIR"]
-    fun = get_frr_at_fars if task != "Identification" else get_fnir_at_fpirs
+    fun = usability_at_security_level #get_frr_at_fars if task != "Identification" else get_fnir_at_fpirs
     values = [0.01, 0.001, 0.0001] if task != "Identification" else [0.3, 0.2, 0.1]
     params = {
         "metric" : metric,
@@ -157,7 +133,7 @@ def get_table_RQ1_AISC(np_file_p, params, task):
     u_s = params["metric"] #usability_security
     mod_n = title.strip().split("_")[0].capitalize()
     results, m, group_ref, ref_id = get_data(np.load(np_file_p))
-    frrs = params["function"](results, group_ref, m)
+    frrs = params["function"](results, group_ref, m, params["values"])
     df_fixedfars = pd.DataFrame(columns=[u_s[0], "Group", "@"+u_s[1]])
     far_values = params["values"]
     labels = ["AM", "AW", "BM", "BW", "CM", "CW"]
@@ -199,13 +175,13 @@ def get_table_single_attr(list_of_files, params, task):
     u_s = params["metric"]
     df_fixedfars = pd.DataFrame(columns=[u_s[0], "Group", "@"+u_s[1], "cmp type"])
     far_values = params["values"]
-     #usability_security
+    #usability_security
     for np_file_p in list_of_files:
         title = np_file_p.split("/")[-1].upper()+"\n\n"
         print(title)
         mod_n = title.strip().split("_")[0].capitalize()
         results, m, group_ref, ref_id = get_data(np.load(np_file_p))
-        frrs = params["function"](results, group_ref, m)
+        frrs = params["function"](results, group_ref, m, params["values"])
 
         if len(frrs) == 3:
             labels = ["Asian", "Black", "Caucasian"]
@@ -228,10 +204,6 @@ def get_table_single_attr(list_of_files, params, task):
         df_01 = df_01.groupby(["@"+u_s[1], "cmp type",'Group']).mean().pivot_table(index='Group', columns=["@"+u_s[1], 'cmp type']).iloc[::-1]
         df_001 = df_001.groupby(["@"+u_s[1], "cmp type",'Group']).mean().pivot_table(index='Group', columns=["@"+u_s[1], 'cmp type']).iloc[::-1]
         df_0001 = df_0001.groupby(["@"+u_s[1], "cmp type",'Group']).mean().pivot_table(index='Group', columns=["@"+u_s[1], 'cmp type']).iloc[::-1]
-
-    #df_01.loc[:,('FNIR',"0.3",'M+F')] = df_01.mean(numeric_only=True, axis=1)
-    #df_001.loc[:,('FNIR',"0.2",'M+F')] = df_001.mean(numeric_only=True, axis=1)
-    #df_0001.loc[:,('FNIR',"0.1",'M+F')] = df_0001.mean(numeric_only=True, axis=1)
     total = df_01.join(df_001.join(df_0001, on="Group"), on='Group')
     total.loc['A+B+C']= total.mean(numeric_only=True, axis=0)
     print(total.round(decimals=3).to_latex())
@@ -256,6 +228,7 @@ def get_results(files_list, task):
             print(el.split("/")[-3])
     res.append((pd.concat(DF)))
     return res
+
 
 def get_plots(results, params, task):
     std_devs = []  # pd.DataFrame(columns=["std. dev", "Dataset", "@"+params["metric"][1], "Train-test Quality"])

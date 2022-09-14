@@ -5,8 +5,8 @@ import sys
 import torch
 from tqdm import tqdm
 
-from src.image_degradation_rq1.training_module.model import High2Low
-from src.image_degradation_rq1.data import high2low_data
+from src.image_degradation.training_module.model import High2Low
+from src.image_degradation.data import high2low_data
 from torch.utils.data import DataLoader
 import numpy as np
 import cv2

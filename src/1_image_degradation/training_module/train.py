@@ -8,9 +8,9 @@ import torch.nn as nn
 import torch.optim as optim
 from torch.utils.data import DataLoader
 
-from src.image_degradation_rq1.data import faces_data, High_Data, Low_Data
-from src.image_degradation_rq1.training_module.model import High2Low, Discriminator
-from src.image_degradation_rq1.training_module.model import GEN_DEEP
+from src.image_degradation.data import faces_data, High_Data, Low_Data
+from src.image_degradation.training_module.model import High2Low, Discriminator
+from src.image_degradation.training_module.model import GEN_DEEP
 from dataset import get_loader
 
 import argparse

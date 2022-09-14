@@ -1,4 +1,3 @@
-import os
 import torchmetrics
 import sys
 import shutil
@@ -9,11 +8,10 @@ import torch
 from torch import optim
 from torch.utils.data import DataLoader
 from tensorboardX import SummaryWriter
-import gc
 
 # import intel_pytorch_extension as ipex
-sys.path.append('../')
-sys.path.append('../../')
+sys.path.append('../../../')
+sys.path.append('../../../../')
 from utils.AverageMeter import AverageMeter
 from data_processor.train_dataset import ImageDataset
 from models_definitions.backbone.backbone_def import BackboneFactory

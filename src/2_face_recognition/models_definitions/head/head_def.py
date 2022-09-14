@@ -6,7 +6,7 @@
 
 import sys
 import yaml
-sys.path.append('../../')
+sys.path.append('../../../../')
 from models_definitions.head.AdaCos import AdaCos
 from models_definitions.head.AdaM_Softmax import Adam_Softmax
 from models_definitions.head.AM_Softmax import AM_Softmax

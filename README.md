@@ -3,7 +3,7 @@
 This is the official repository of the paper entitled "Demographic Bias in Deep Face Recognition in The Wild".
 <br>
 <div align="center">
- <img src="images/overview.png"  width="750" alt="Pipeline Overview"/> 
+ <img src="src/2_face_recognition/images/overview.png"  width="750" alt="Pipeline Overview"/> 
 </div>
 <br>
 
@@ -13,7 +13,7 @@ We provide a Pytorch toolbox for Face Images Degradation (1) and Face Recognitio
 - Degrades given datasets
 <br>
 <div align="center">
- <img src="images/degradation.jpg"  width="750" alt="Degradation Results"/> 
+ <img src="src/2_face_recognition/images/degradation.jpg"  width="750" alt="Degradation Results"/> 
 </div>
 <br>
 
@@ -21,7 +21,7 @@ We provide a Pytorch toolbox for Face Images Degradation (1) and Face Recognitio
 
 <br>
 <div align="center">
- <img src="images/discriminator_example.png"  width="750" alt="Degradation Comparison"/> 
+ <img src="src/2_face_recognition/images/discriminator_example.png"  width="750" alt="Degradation Comparison"/> 
 </div>
 <br>
 
@@ -30,24 +30,24 @@ an evaluation part that:
 - Provides evaluations of the given model(s) in order to obtain metrics like ROC curves, AUCs and EERs.
 <br>
 <div align="center">
- <img src="./images/ROC.png" height="250" width="250" alt="ROC curve Example"/> <img src="./images/EER.png" height="250" width="250" alt="EER graph Example"/>
+ <img src="src/2_face_recognition/images/ROC.png" height="250" width="250" alt="ROC curve Example"/> <img src="src/2_face_recognition/images/EER.png" height="250" width="250" alt="EER graph Example"/>
 </div>
 <br>
 
 - Provides metrics as FRR@FARs (FNIR@FPIRs) variation across multiple factors like sex and ethnicity and their combinations
 <br>
 <div align="center">
- <img src="images/table2.png"  width="500" alt="Values across genre(s)"/> 
+ <img src="src/2_face_recognition/images/table2.png"  width="500" alt="Values across genre(s)"/> 
 </div>
 <br>
 <br>
 <div align="center">
- <img src="images/table3.png"  width="500" alt="Values across ethnicity"/> 
+ <img src="src/2_face_recognition/images/table3.png"  width="500" alt="Values across ethnicity"/> 
 </div>
 <br>
 <br>
 <div align="center">
- <img src="images/table.png"  width="500" alt="Values across combined attributes"/> 
+ <img src="src/2_face_recognition/images/table.png"  width="500" alt="Values across combined attributes"/> 
 </div>
 <br>
 
@@ -66,26 +66,26 @@ In order to install all the necessary prerequisites, you can simply execute the 
 ## Degradation Module
 
 ### GAN Training
-See <a href="src/image_degradation_rq1/training_module/README.md" target="_blank">README</a> in <a href="src/image_degradation_rq1/training_module" target="_blank">src/image_degradation_rq1/training_module</a> folder
+See <a href="src/1_image_degradation/training_module/README.md" target="_blank">README</a> in <a href="src/1_image_degradation/training_module" target="_blank">src/image_degradation_rq1/training_module</a> folder
 
 ### GAN Evaluation
 
-See <a href="src/image_degradation_rq1/evaluation_module/README.md" target="_blank">README</a> in <a href="src/image_degradation_rq1/evaluation_module" target="_blank">src/image_degradation_rq1/evaluation_module</a> folder
+See <a href="src/1_image_degradation/evaluation_module/README.md" target="_blank">README</a> in <a href="src/1_image_degradation/evaluation_module" target="_blank">src/1_image_degradation/evaluation_module</a> folder
 
 ### Image Degradation
 
-See <a href="src/image_degradation_rq1/degradation_module/README.md" target="_blank">README</a> in <a href="src/image_degradation_rq1/degradation_module" target="_blank">src/image_degradation_rq1/degradation_module</a> folder
+See <a href="src/1_image_degradation/degradation_module/README.md" target="_blank">README</a> in <a href="src/1_image_degradation/degradation_module" target="_blank">src/1_image_degradation/degradation_module</a> folder
 
 
 ## Face Recognition Module
 ### Model Training
-See <a href="training/README.md" target="_blank">README</a> in <a href="training" target="_blank">training folder</a>
+See <a href="src/2_face_recognition/training/README.md" target="_blank">README</a> in <a href="src/2_face_recognition/training" target="_blank">src/2_face_recognition/training</a>
 
 ### Dataset Preprocessing and combined models training
-See <a href="src/face_recognition_rq2/README.md" target="_blank">README</a> in <a href="src" target="_blank">src/face_recognition_rq2</a> folder
+See <a href="src/2_face_recognition/README.md" target="_blank">README</a> in <a href="src" target="_blank">src/2_face_recognition</a> folder
 
 ### Model Evaluation
-See <a href="src/experiments/README.md" target="_blank">README</a> in <a href="src/experiments" target="_blank">src/experiments</a> folder
+See <a href="src/2_face_recognition/experimental/README.md" target="_blank">README</a> in <a href="src/2_face_recognition/experimental" target="_blank">src/2_face_recognition/experimental</a> folder
 
 
 ## Contributing
