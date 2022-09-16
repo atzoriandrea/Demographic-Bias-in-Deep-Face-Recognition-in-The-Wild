@@ -1,6 +1,6 @@
 # Demographic Bias in Deep Face Recognition in The Wild
 
-This is the official repository of the paper entitled "Demographic Bias in Deep Face Recognition in The Wild".
+This is the official repository of the paper entitled "Demographic Bias in Deep Face Recognition in The Wild", which is currently under review on JSTSP (Journal of Selected Topics on Signal Processing).
 <br>
 <div align="center">
  <img src="src/2_face_recognition/images/overview.png"  width="750" alt="Pipeline Overview"/> 
