@@ -109,7 +109,7 @@ You should have received a copy of the GNU General Public License along with thi
 
 This work is an extension of <a href="https://github.com/atzoriandrea/Exploratory-Analysis-in-Face-Authentication" target="_blank">Explaining Disparate Impacts in Face Recognition via Image Characteristics</a>, that will be published in International Joint Conference on Biometrics (IJCB 2022) proceedings. 
 
-`
+
 @misc{https://doi.org/10.48550/arxiv.2208.11099,
   doi = {10.48550/ARXIV.2208.11099},
   url = {https://arxiv.org/abs/2208.11099},
@@ -120,5 +120,5 @@ This work is an extension of <a href="https://github.com/atzoriandrea/Explorator
   year = {2022},
   copyright = {arXiv.org perpetual, non-exclusive license}
 }
-`
+
 
