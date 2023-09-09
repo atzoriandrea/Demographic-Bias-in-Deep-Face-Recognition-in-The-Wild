@@ -40,12 +40,12 @@ an evaluation part that:
 - Provides metrics as FRR@FARs (FNIR@FPIRs) Degree of Bias across multiple factors (e.g.: gender and ethnicity and their combinations) and imposed security thresholds.
 <br>
 <div align="center">
- <img src="src/2_face_recognition/images/HRVerification.png"  width="500" alt="Values across genre(s)"/> 
+ <img src="src/2_face_recognition/images/HRVerification.png"  width="750" alt="Values across genre(s)"/> 
 </div>
 <br>
 <br>
 <div align="center">
- <img src="src/2_face_recognition/images/LRVerification.png"  width="500" alt="Values across ethnicity"/> 
+ <img src="src/2_face_recognition/images/LRVerification.png"  width="750" alt="Values across ethnicity"/> 
 </div>
 
 
