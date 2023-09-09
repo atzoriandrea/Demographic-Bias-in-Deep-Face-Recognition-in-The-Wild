@@ -1,12 +1,12 @@
 # Demographic Bias in Deep Face Recognition in The Wild
 
-This is the official repository of the paper entitled "Demographic Bias in Deep Face Recognition in The Wild", published in: IEEE Journal of Selected Topics in Signal Processing ( Volume: 17, Issue: 3, May 2023)
+This is the official repository of the paper entitled "Demographic Bias in Deep Face Recognition in The Wild", published in: IEEE Journal of Selected Topics in Signal Processing (Volume: 17, Issue: 3, May 2023)
 
 The original paper is available <a href="https://ieeexplore.ieee.org/document/10054108" target="_blank">here</a>. 
 
 <br>
 <div align="center">
- <img src="src/2_face_recognition/images/overview.png"  width="750" alt="Pipeline Overview"/> 
+ <img src="src/2_face_recognition/images/JSTSP_fw.png"  width="750" alt="Pipeline Overview"/> 
 </div>
 <br>
 
@@ -37,22 +37,17 @@ an evaluation part that:
 </div>
 <br>
 
-- Provides metrics as FRR@FARs (FNIR@FPIRs) variation across multiple factors like sex and ethnicity and their combinations
+- Provides metrics as FRR@FARs (FNIR@FPIRs) Degree of Bias across multiple factors (e.g.: gender and ethnicity and their combinations) and imposed security thresholds.
 <br>
 <div align="center">
- <img src="src/2_face_recognition/images/table2.png"  width="500" alt="Values across genre(s)"/> 
+ <img src="src/2_face_recognition/images/HRVerification.png"  width="500" alt="Values across genre(s)"/> 
 </div>
 <br>
 <br>
 <div align="center">
- <img src="src/2_face_recognition/images/table3.png"  width="500" alt="Values across ethnicity"/> 
+ <img src="src/2_face_recognition/images/LRVerification.png"  width="500" alt="Values across ethnicity"/> 
 </div>
-<br>
-<br>
-<div align="center">
- <img src="src/2_face_recognition/images/table.png"  width="500" alt="Values across combined attributes"/> 
-</div>
-<br>
+
 
 ## Requirements
 - Python >= 3.7
