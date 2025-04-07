@@ -10,7 +10,7 @@ The original paper is available <a href="https://ieeexplore.ieee.org/document/10
 </div>
 <br>
 
-We provide a Pytorch toolbox for Face Images Degradation (1) and Face Recognition training and testing (2). 
+We provide a Pytorch toolbox for Face Image Degradation (1) and Face Recognition training and testing (2). 
 
 1) The Image Degradation module provides a training part for both GANs and their Discriminators and a use/evaluation part that:
 - Degrades given datasets
@@ -87,7 +87,7 @@ See <a href="src/2_face_recognition/experimental/README.md" target="_blank">READ
 
 
 ## Contributing
-This code is provided for educational purposes and aims to facilitate reproduction of our results, and further research in this direction. We have done our best to document, refactor, and test the code before publication.
+This code is provided for educational purposes and aims to facilitate the reproduction of our results and further research in this direction. We have done our best to document, refactor, and test the code before publication.
 
 If you find any bugs or would like to contribute new models, training protocols, etc, please let us know.
 
@@ -105,7 +105,7 @@ You should have received a copy of the GNU General Public License along with thi
 
 ## Acknowledgements
 
-This work is an extension of <a href="https://github.com/atzoriandrea/Exploratory-Analysis-in-Face-Authentication" target="_blank">Explaining Disparate Impacts in Face Recognition via Image Characteristics</a>, that has been published in International Joint Conference on Biometrics (IJCB 2022) proceedings. (Available <a href="https://ieeexplore.ieee.org/document/10007937" target="_blank">here</a>)
+This work is an extension of <a href="https://github.com/atzoriandrea/Exploratory-Analysis-in-Face-Authentication" target="_blank">Explaining Bias in Deep Face Recognition via Image Characteristics</a>, which has been published in the International Joint Conference on Biometrics (IJCB 2022) proceedings. (Available <a href="https://ieeexplore.ieee.org/document/10007937" target="_blank">here</a>)
 
 
 ```
